@@ -5,13 +5,6 @@
 
 #include "imgui.h"
 #include <vector>
-#include <random>//用于获得随机数//这是一个教学示范，属于CSU,2020秋，《面向对象编程(C++)》。
-//    这个教学示范针对基于ImGUI的图形界面编程，并对继承和多态进行复习
-//    请填充标记了“请填充此处代码”的代码
-//        by Lei,   2020-11-20
-
-#include "imgui.h"
-#include <vector>
 #include <random>//用于获得随机数
 #include <string>
 #include <cmath>
