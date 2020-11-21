@@ -1,83 +1,92 @@
-//ÕâÊÇÒ»¸ö½ÌÑ§Ê¾·¶£¬ÊôÓÚCSU,2020Çï£¬¡¶ÃæÏò¶ÔÏó±à³Ì(C++)¡·¡£
-//    Õâ¸ö½ÌÑ§Ê¾·¶Õë¶Ô»ùÓÚImGUIµÄÍ¼ĞÎ½çÃæ±à³Ì£¬²¢¶Ô¼Ì³ĞºÍ¶àÌ¬½øĞĞ¸´Ï°
-//    ÇëÌî³ä±ê¼ÇÁË¡°ÇëÌî³ä´Ë´¦´úÂë¡±µÄ´úÂë
+//è¿™æ˜¯ä¸€ä¸ªæ•™å­¦ç¤ºèŒƒï¼Œå±äºCSU,2020ç§‹ï¼Œã€Šé¢å‘å¯¹è±¡ç¼–ç¨‹(C++)ã€‹ã€‚
+//    è¿™ä¸ªæ•™å­¦ç¤ºèŒƒé’ˆå¯¹åŸºäºImGUIçš„å›¾å½¢ç•Œé¢ç¼–ç¨‹ï¼Œå¹¶å¯¹ç»§æ‰¿å’Œå¤šæ€è¿›è¡Œå¤ä¹ 
+//    è¯·å¡«å……æ ‡è®°äº†â€œè¯·å¡«å……æ­¤å¤„ä»£ç â€çš„ä»£ç 
 //        by Lei,   2020-11-20
 
 #include "imgui.h"
 #include <vector>
-#include <random>//ÓÃÓÚ»ñµÃËæ»úÊı
+#include <random>//ç”¨äºè·å¾—éšæœºæ•°//è¿™æ˜¯ä¸€ä¸ªæ•™å­¦ç¤ºèŒƒï¼Œå±äºCSU,2020ç§‹ï¼Œã€Šé¢å‘å¯¹è±¡ç¼–ç¨‹(C++)ã€‹ã€‚
+//    è¿™ä¸ªæ•™å­¦ç¤ºèŒƒé’ˆå¯¹åŸºäºImGUIçš„å›¾å½¢ç•Œé¢ç¼–ç¨‹ï¼Œå¹¶å¯¹ç»§æ‰¿å’Œå¤šæ€è¿›è¡Œå¤ä¹ 
+//    è¯·å¡«å……æ ‡è®°äº†â€œè¯·å¡«å……æ­¤å¤„ä»£ç â€çš„ä»£ç 
+//        by Lei,   2020-11-20
+
+#include "imgui.h"
+#include <vector>
+#include <random>//ç”¨äºè·å¾—éšæœºæ•°
 #include <string>
 #include <cmath>
 
-std::default_random_engine generator;//È«¾Ö±äÁ¿£¬ÓÃÓÚÉú³ÉËæ»úÊı£¬ÒòÎªÕâ¸öÓÎÏ·ĞèÒªÒ»¶¨µÄËæ»úĞÔ£¬±ÈÈçËæ»úÔË¶¯µÄµĞ·½
-std::uniform_int_distribution<int> distribution(0, 100);//È«¾Ö±äÁ¿£¬ÓÃÓÚÉú³É¾ùÔÈ·Ö²¼µÄËæ»úÊı
+std::default_random_engine generator;//å…¨å±€å˜é‡ï¼Œç”¨äºç”Ÿæˆéšæœºæ•°ï¼Œå› ä¸ºè¿™ä¸ªæ¸¸æˆéœ€è¦ä¸€å®šçš„éšæœºæ€§ï¼Œæ¯”å¦‚éšæœºè¿åŠ¨çš„æ•Œæ–¹
+std::uniform_int_distribution<int> distribution(0, 100);//å…¨å±€å˜é‡ï¼Œç”¨äºç”Ÿæˆå‡åŒ€åˆ†å¸ƒçš„éšæœºæ•°
 
-/*ÓÃÓÚ±£´æÍæ¼ÒµÄµ±Ç°Î»ÖÃ,ÉèÖÃ³ÉÈ«¾Ö±äÁ¿·½±ãÖ®ºóµÄFollowPlayerCircleÀà·ÃÎÊÍæ¼ÒµÄÎ»ÖÃ*/
+/*ç”¨äºä¿å­˜ç©å®¶çš„å½“å‰ä½ç½®,è®¾ç½®æˆå…¨å±€å˜é‡æ–¹ä¾¿ä¹‹åçš„FollowPlayerCircleç±»è®¿é—®ç©å®¶çš„ä½ç½®*/
 double player_current_pos_x;
 double player_current_pos_y;
 
-//·ÉĞĞÎïµÄ³éÏóÀà£¬ËùÓĞÅÉÉúÀà¶¼ÊÇÔ²ĞÎµÄ£¬ÕâÑù±ãÓÚ½øĞĞÅö×²¼ì²â¡£
+//é£è¡Œç‰©çš„æŠ½è±¡ç±»ï¼Œæ‰€æœ‰æ´¾ç”Ÿç±»éƒ½æ˜¯åœ†å½¢çš„ï¼Œè¿™æ ·ä¾¿äºè¿›è¡Œç¢°æ’æ£€æµ‹ã€‚
 class AbstractCircle
 {
 protected:
-    ImVec2 _pos;//Î»ÖÃ
-    float _radius;//°ë¾¶
-    ImDrawList* _pen;//ÓÃÓÚ»æÖÆµÄ»­±Ê£¬ÊÇImGui¿âÖĞµÄµ×²ã»æÍ¼¶ÔÏó¡£
+    ImVec2 _pos;//ä½ç½®
+    float _radius;//åŠå¾„
+    ImDrawList* _pen;//ç”¨äºç»˜åˆ¶çš„ç”»ç¬”ï¼Œæ˜¯ImGuiåº“ä¸­çš„åº•å±‚ç»˜å›¾å¯¹è±¡ã€‚
 public:
     AbstractCircle(ImDrawList* pen, ImVec2 pos, float radius) :_pen(pen), _pos(pos), _radius(radius) {};
-    virtual void draw_self() = 0;//»æÖÆ×Ô¼º
-    virtual void live_step(double time) = 0;//¶È¹ıÒ»¸öÊ±¼äÆ¬¡£ÔÚÃ¿¸öÊ±¼äÆ¬ÖĞ¿ÉÒÔÔË¶¯¡¢¿ÉÒÔ¸Ä±ä¡£
-    virtual std::string get_class_name() { return "AbstractCircle"; }//»ñµÃ¶ÔÏóµÄÀà±ğÃû
+    virtual void draw_self() = 0;//ç»˜åˆ¶è‡ªå·±
+    virtual void live_step(double time) = 0;//åº¦è¿‡ä¸€ä¸ªæ—¶é—´ç‰‡ã€‚åœ¨æ¯ä¸ªæ—¶é—´ç‰‡ä¸­å¯ä»¥è¿åŠ¨ã€å¯ä»¥æ”¹å˜ã€‚
+    virtual std::string get_class_name() { return "AbstractCircle"; }//è·å¾—å¯¹è±¡çš„ç±»åˆ«å
 
-    ImVec2 get_pos() { return _pos; }//»ñµÃµ±Ç°Î»ÖÃ
-    float get_radius() { return _radius; }//»ñµÃ°ë¾¶
+    static void reset_pos(std::vector<AbstractCircle*>& obj);/*å£°æ˜è®©é»‘è‰²çƒå’Œé»„è‰²çƒäº’ä¸é‡å å‡½æ•°*/
+
+    ImVec2 get_pos() { return _pos; }//è·å¾—å½“å‰ä½ç½®
+    float get_radius() { return _radius; }//è·å¾—åŠå¾„
 };
 
 class PlayerCircle : public AbstractCircle
 {
 private:
-    float _speed = 1;//Ã¿´ÎÓÃ»§°´¼üÊ±µÄÒÆ¶¯²½³¤
+    float _speed = 1;//æ¯æ¬¡ç”¨æˆ·æŒ‰é”®æ—¶çš„ç§»åŠ¨æ­¥é•¿
 public:
     PlayerCircle(ImDrawList* pen, ImVec2 pos, float radius) :AbstractCircle(pen, pos, radius) {};
 
     void draw_self() {
-        _pen->AddCircleFilled(_pos, _radius, IM_COL32(255, 0, 0, 200));//¾ÍÊÇÒ»¸ö¼òµ¥µÄºìÉ«ÊµĞÄÔ²
+        _pen->AddCircleFilled(_pos, _radius, IM_COL32(255, 0, 0, 200));//å°±æ˜¯ä¸€ä¸ªç®€å•çš„çº¢è‰²å®å¿ƒåœ†
     }
     void live_step(double time)
     {
-        //¸ù¾İÓÃ»§µÄÊäÈë¸Ä±äÎ»ÖÃ
-        if (ImGui::IsKeyPressed(37))//ÓÃ»§°´ÏÂ×ó¼ıÍ·°´¼ü
+        //æ ¹æ®ç”¨æˆ·çš„è¾“å…¥æ”¹å˜ä½ç½®
+        if (ImGui::IsKeyPressed(37))//ç”¨æˆ·æŒ‰ä¸‹å·¦ç®­å¤´æŒ‰é”®
             _pos.x -= _speed;
-        if (ImGui::IsKeyPressed(39))//ÓÃ»§°´ÏÂÓÒ¼ıÍ·°´¼ü
+        if (ImGui::IsKeyPressed(39))//ç”¨æˆ·æŒ‰ä¸‹å³ç®­å¤´æŒ‰é”®
             _pos.x += _speed;
-        if (ImGui::IsKeyPressed(38))//ÓÃ»§°´ÏÂÉÏ¼ıÍ·°´¼ü
+        if (ImGui::IsKeyPressed(38))//ç”¨æˆ·æŒ‰ä¸‹ä¸Šç®­å¤´æŒ‰é”®
             _pos.y -= _speed;
-        if (ImGui::IsKeyPressed(40))//ÓÃ»§°´ÏÂÏÂ¼ıÍ·°´¼ü
+        if (ImGui::IsKeyPressed(40))//ç”¨æˆ·æŒ‰ä¸‹ä¸‹ç®­å¤´æŒ‰é”®
             _pos.y += _speed;
     }
 
     std::string get_class_name() { return "PlayerCircle"; }
 
-    void set_speed(float speed) { _speed = speed; }//ÉèÖÃÔË¶¯ËÙ¶È
+    void set_speed(float speed) { _speed = speed; }//è®¾ç½®è¿åŠ¨é€Ÿåº¦
 };
 
 class RandomMoveCircle :public AbstractCircle
 {
 private:
-    float _speed = 1;//Ã¿¸öÊ±¼äÆ¬µÄÔË¶¯²½³¤
+    float _speed = 1;//æ¯ä¸ªæ—¶é—´ç‰‡çš„è¿åŠ¨æ­¥é•¿
 public:
     RandomMoveCircle(ImDrawList* pen, ImVec2 pos, float radius) : AbstractCircle(pen, pos, radius) {};
 
     void draw_self() {
-        _pen->AddCircleFilled(_pos, _radius, IM_COL32(0, 0, 0, 200));//¾ÍÊÇÒ»¸ö¼òµ¥µÄºÚÉ«ÊµĞÄÔ²
+        _pen->AddCircleFilled(_pos, _radius, IM_COL32(0, 0, 0, 200));//å°±æ˜¯ä¸€ä¸ªç®€å•çš„é»‘è‰²å®å¿ƒåœ†
     }
 
     void live_step(double time)
     {
-        //»ñµÃÒ»¸öËæ»úµÄË®Æ½·½Ïò£¬²¢ÑØ¸Ã·½ÏòÒÆ¶¯Ò»¸ö²½³¤
+        //è·å¾—ä¸€ä¸ªéšæœºçš„æ°´å¹³æ–¹å‘ï¼Œå¹¶æ²¿è¯¥æ–¹å‘ç§»åŠ¨ä¸€ä¸ªæ­¥é•¿
         bool bLeft = distribution(generator) > 49;
         _pos.x = bLeft ? _pos.x - _speed : _pos.x + _speed;
-        //»ñµÃÒ»¸öËæ»úµÄÊúÖ±·½Ïò£¬²¢ÑØ¸Ã·½ÏòÒÆ¶¯Ò»¸ö²½³¤
+        //è·å¾—ä¸€ä¸ªéšæœºçš„ç«–ç›´æ–¹å‘ï¼Œå¹¶æ²¿è¯¥æ–¹å‘ç§»åŠ¨ä¸€ä¸ªæ­¥é•¿
         bool bUp = distribution(generator) > 49;
         _pos.y = bUp ? _pos.y - _speed : _pos.y + _speed;
     }
@@ -87,17 +96,17 @@ public:
     void set_speed(float speed) { _speed = speed; }
 };
 
-/*    ÇëÌî³ä´Ë´¦´úÂë  -- ´ÓAbstractCircleÅÉÉúÀàFollowPlayerCircle
-*                         Õâ¸öÅÉÉúÀàÄÜ¹»ÔÚÃ¿¸öÊ±¼äÆ¬³¯Íæ¼ÒµÄºìÉ«Ô²Çò·½ÏòÒÆ¶¯Ò»¸ö²½³¤
-*                          ÒªÇóÕâÀàĞ¡ÇòÒÔ»ÆÉ«Ìî³äÔ²ÏÔÊ¾£¬´óĞ¡ÓëºìÇòºÍºÚÇòÒ»Ñù¡£
-*                         ÒªÄÜ¹»ÔÚÉèÖÃ´°¿ÚÖĞÉèÖÃÕâÀàĞ¡ÇòµÄÒÆ¶¯²½³¤ºÍÊıÁ¿¡£
-*                          ÒªÔÚº¯ÊıAirCombatWindowµÄÓÎÏ·³õÊ¼»¯²¿·Ö£¬´´½¨²¢Ìí¼ÓÖ¸¶¨ÊıÁ¿µÄÕâÀàĞ¡Çò
+/*    è¯·å¡«å……æ­¤å¤„ä»£ç   -- ä»AbstractCircleæ´¾ç”Ÿç±»FollowPlayerCircle
+*                         è¿™ä¸ªæ´¾ç”Ÿç±»èƒ½å¤Ÿåœ¨æ¯ä¸ªæ—¶é—´ç‰‡æœç©å®¶çš„çº¢è‰²åœ†çƒæ–¹å‘ç§»åŠ¨ä¸€ä¸ªæ­¥é•¿
+*                          è¦æ±‚è¿™ç±»å°çƒä»¥é»„è‰²å¡«å……åœ†æ˜¾ç¤ºï¼Œå¤§å°ä¸çº¢çƒå’Œé»‘çƒä¸€æ ·ã€‚
+*                         è¦èƒ½å¤Ÿåœ¨è®¾ç½®çª—å£ä¸­è®¾ç½®è¿™ç±»å°çƒçš„ç§»åŠ¨æ­¥é•¿å’Œæ•°é‡ã€‚
+*                          è¦åœ¨å‡½æ•°AirCombatWindowçš„æ¸¸æˆåˆå§‹åŒ–éƒ¨åˆ†ï¼Œåˆ›å»ºå¹¶æ·»åŠ æŒ‡å®šæ•°é‡çš„è¿™ç±»å°çƒ
 *
-*      £¡£¡£¡×¢Òâ£ºÕâ¸öÒªÇó±È½ÏÄÑ£¬½¨ÒéÄãÌî³äÍêÆäËû²¿·ÖµÄ´úÂëºóÔÙÀ´³¢ÊÔ¡£
+*      ï¼ï¼ï¼æ³¨æ„ï¼šè¿™ä¸ªè¦æ±‚æ¯”è¾ƒéš¾ï¼Œå»ºè®®ä½ å¡«å……å®Œå…¶ä»–éƒ¨åˆ†çš„ä»£ç åå†æ¥å°è¯•ã€‚
 */
 
-/*ÏÂÃæµÄÕâ¸öÀà·ÂÕÕÉÏÃæRandomMoveCircleÀàµÄĞ´·¨¼´¿É,Î¨Ò»Òª×¢ÒâµÄÊÇFollowPlayerCircleÀàÖĞµÄ»ÆÉ«Ğ¡ÇòµÄÒÆ¶¯·½Ê½²»Í¬*/
-class FollowPlayerCircle :public AbstractCircle/*×¢ÒâÒªpublic¼Ì³Ğ,·ñÔò»á±¨´í*/
+/*ä¸‹é¢çš„è¿™ä¸ªç±»ä»¿ç…§ä¸Šé¢RandomMoveCircleç±»çš„å†™æ³•å³å¯,å”¯ä¸€è¦æ³¨æ„çš„æ˜¯FollowPlayerCircleç±»ä¸­çš„é»„è‰²å°çƒçš„ç§»åŠ¨æ–¹å¼ä¸åŒ*/
+class FollowPlayerCircle :public AbstractCircle/*æ³¨æ„è¦publicç»§æ‰¿,å¦åˆ™ä¼šæŠ¥é”™*/
 {
 private:
     float _speed = 1;
@@ -106,12 +115,12 @@ public:
 
     void draw_self()
     {
-        _pen->AddCircleFilled(_pos, _radius, IM_COL32(255, 255, 0, 200));/*¾ÍÊÇÒ»¸ö¼òµ¥µÄ»ÆÉ«ÊµĞÄÔ²,ÕâÀïµÄIM_COL32(255, 255, 0, 200)ÀïÃæµÄÇ°Èı¸ö²ÎÊıÊÇRGB±àÂë(¼´ºìÉ«+ÂÌÉ«+À¶É«Èı¸öÑÕÉ«µÄÖµ»ìºÏ)*/
+        _pen->AddCircleFilled(_pos, _radius, IM_COL32(255, 255, 0, 200));/*å°±æ˜¯ä¸€ä¸ªç®€å•çš„é»„è‰²å®å¿ƒåœ†,è¿™é‡Œçš„IM_COL32(255, 255, 0, 200)é‡Œé¢çš„å‰ä¸‰ä¸ªå‚æ•°æ˜¯RGBç¼–ç (å³çº¢è‰²+ç»¿è‰²+è“è‰²ä¸‰ä¸ªé¢œè‰²çš„å€¼æ··åˆ)*/
     }
     /*
-     *ÏÂÃæµÄ³ÉÔ±º¯ÊıÊÇ±¾´ÎÊµÑé×îÄÑµÄ²¿·Ö,ÄÑµãÔÚÓÚÈçºÎµ÷·ÃÎÊÍæ¼Òµ±Ç°µÄÎ»ÖÃ
-     *Èç¹ûÔÚlive_stepÖĞ´«ÈëÍæ¼ÒµÄxºÍy×ø±ê,ÓÉÓÚ¶ÔÓ¦µÄxºÍy×ø±ê¶¼ÊÇº¯ÊıÀïµÄ¾²Ì¬±äÁ¿,Ã»ÓĞ·ÃÎÊÈ¨ÏŞ
-     *ÇÒÔÚ¸ÃÀàµÄ¸¸ÀàAbstractCircleÖĞµÄlive_stepÊÇ³éÏó·½·¨,²»ÄÜµ÷ÓÃ¾²Ì¬±äÁ¿,ËùÒÔÈçºÎ´«ÈëÍæ¼Òµ±Ç°µÄÎ»ÖÃÔòÊÇÎÊÌâµÄ¹Ø¼ü
+     *ä¸‹é¢çš„æˆå‘˜å‡½æ•°æ˜¯æœ¬æ¬¡å®éªŒæœ€éš¾çš„éƒ¨åˆ†,éš¾ç‚¹åœ¨äºå¦‚ä½•è°ƒè®¿é—®ç©å®¶å½“å‰çš„ä½ç½®
+     *å¦‚æœåœ¨live_stepä¸­ä¼ å…¥ç©å®¶çš„xå’Œyåæ ‡,ç”±äºå¯¹åº”çš„xå’Œyåæ ‡éƒ½æ˜¯å‡½æ•°é‡Œçš„é™æ€å˜é‡,æ²¡æœ‰è®¿é—®æƒé™
+     *ä¸”åœ¨è¯¥ç±»çš„çˆ¶ç±»AbstractCircleä¸­çš„live_stepæ˜¯æŠ½è±¡æ–¹æ³•,ä¸èƒ½è°ƒç”¨é™æ€å˜é‡,æ‰€ä»¥å¦‚ä½•ä¼ å…¥ç©å®¶å½“å‰çš„ä½ç½®åˆ™æ˜¯é—®é¢˜çš„å…³é”®
      */
     void live_step(double time)
     {
@@ -130,23 +139,23 @@ public:
 
 
 
-//È«¾Ö±äÁ¿
-std::vector<AbstractCircle*> circles;//±£´æËùÓĞµÄ·ÉĞĞÎï¶ÔÏó£¬°üÀ¨Íæ¼Ò¡£×¢ÒâÕâÊÇÒ»¸öÈ«¾Ö±äÁ¿£¬
-                                        //ÎÒÃÇ»áÔÚmain.cppµÄ³ÌĞò½áÊøÊ±ÊÖ¹¤delete¸ÃÁĞ±íÖĞµÄÃ¿¸ö¶ÔÏó¡£
-float player_speed = 5.0f;//Íæ¼ÒµÄÒÆ¶¯ËÙ¶È
-float random_circle_speed = 5.0f;//Ëæ»úÔË¶¯Ğ¡ÇòµÄËÙ¶È
-int num_random_circle = 20;//Ëæ»úÔË¶¯Ğ¡ÇòµÄÊıÁ¿
-int num_follow_circle = 20;/*³¯Íæ¼ÒÔË¶¯Ğ¡ÇòµÄÊıÁ¿*/
-float follow_circle_speed = 5.0f;/*³¯Íæ¼ÒÔË¶¯Ğ¡ÇòµÄËÙ¶È*/
+//å…¨å±€å˜é‡
+std::vector<AbstractCircle*> circles;//ä¿å­˜æ‰€æœ‰çš„é£è¡Œç‰©å¯¹è±¡ï¼ŒåŒ…æ‹¬ç©å®¶ã€‚æ³¨æ„è¿™æ˜¯ä¸€ä¸ªå…¨å±€å˜é‡ï¼Œ
+                                        //æˆ‘ä»¬ä¼šåœ¨main.cppçš„ç¨‹åºç»“æŸæ—¶æ‰‹å·¥deleteè¯¥åˆ—è¡¨ä¸­çš„æ¯ä¸ªå¯¹è±¡ã€‚
+float player_speed = 5.0f;//ç©å®¶çš„ç§»åŠ¨é€Ÿåº¦
+float random_circle_speed = 5.0f;//éšæœºè¿åŠ¨å°çƒçš„é€Ÿåº¦
+int num_random_circle = 20;//éšæœºè¿åŠ¨å°çƒçš„æ•°é‡
+int num_follow_circle = 20;/*æœç©å®¶è¿åŠ¨å°çƒçš„æ•°é‡*/
+float follow_circle_speed = 5.0f;/*æœç©å®¶è¿åŠ¨å°çƒçš„é€Ÿåº¦*/
 
 
-void reset_game()//ÖØÖÃÓÎÏ·
+void reset_game()//é‡ç½®æ¸¸æˆ
 {
-    //ÖØÖÃËùÓĞ²ÎÊı
+    //é‡ç½®æ‰€æœ‰å‚æ•°
     player_speed = 5.0f;
     random_circle_speed = 5.0f;
 
-    //ÊÍ·ÅËùÓĞ·ÉĞĞÎï¶ÔÏó
+    //é‡Šæ”¾æ‰€æœ‰é£è¡Œç‰©å¯¹è±¡
     for (auto o : circles)
     {
         delete o;
@@ -154,22 +163,64 @@ void reset_game()//ÖØÖÃÓÎÏ·
     circles.clear();
 };
 
-//ÓÎÏ·µÄÖ÷º¯Êı
+/*è®©çƒä¸çƒä¹‹é—´(ä¸åŒ…æ‹¬çº¢çƒ)äº’ä¸é‡å ,åŸç†ä¸ºå¦‚æœä¸¤çƒçš„è·ç¦»å°äºä¸¤è€…çš„åŠå¾„ä¹‹å’Œåˆ™å„é€€ä¸€ä¸ªåŠå¾„*/
+void AbstractCircle::reset_pos(std::vector<AbstractCircle*>& obj)
+{
+    for (std::vector<AbstractCircle*>::iterator i = obj.begin() + 1; obj.end() != i; i++)/*è¿™é‡Œé¢çš„std::vector<AbstractCircle*>::iterator iä¹Ÿå¯ä»¥æ¢æˆauto i*/
+    {
+        for (auto j = i + 1; obj.end() != j; j++)
+        {
+            float x1 = (*i)->get_pos().x, x2 = (*j)->get_pos().x;
+            float y1 = (*i)->get_pos().y, y2 = (*j)->get_pos().y;
+            float radius1 = (*i)->get_radius();
+            float radius2 = (*j)->get_radius();
+            float distence = pow(x1 - x2, 2) + pow(y1 - y2, 2) - pow(radius1 + radius2, 2);
+
+            if (distence < 0)
+            {
+                if (x1 < x2)
+                {
+                    (*i)->_pos.x -= radius1;
+                    (*j)->_pos.x += radius2;
+                }
+                else
+                {
+                    (*i)->_pos.x += radius1;
+                    (*j)->_pos.x -= radius2;
+                }
+                if (y1 < y2)
+                {
+                    (*i)->_pos.y -= radius1;
+                    (*j)->_pos.y += radius2;
+                }
+                else
+                {
+                    (*i)->_pos.y += radius1;
+                    (*j)->_pos.y -= radius2;
+                }
+            }
+        }
+    }
+}
+
+
+
+//æ¸¸æˆçš„ä¸»å‡½æ•°
 void AirCombatWindow()
 {
-    static PlayerCircle* player = NULL;//±£´æÖ¸ÏòÍæ¼ÒºìÉ«Ğ¡ÇòµÄÖ¸Õë  
-    static bool bPauseGame = false;//±ê¼ÇÊÇ·ñÒªÔİÍ£ÓÎÏ·
+    static PlayerCircle* player = NULL;//ä¿å­˜æŒ‡å‘ç©å®¶çº¢è‰²å°çƒçš„æŒ‡é’ˆ  
+    static bool bPauseGame = false;//æ ‡è®°æ˜¯å¦è¦æš‚åœæ¸¸æˆ
 
-    //½øĞĞÓÎÏ·µÄ³õÊ¼»¯
-    ImDrawList* pen = ImGui::GetBackgroundDrawList();//»ñµÃ»­±Ê¶ÔÏó
+    //è¿›è¡Œæ¸¸æˆçš„åˆå§‹åŒ–
+    ImDrawList* pen = ImGui::GetBackgroundDrawList();//è·å¾—ç”»ç¬”å¯¹è±¡
     ImVec2 screen_size = ImGui::GetIO().DisplaySize;
     if (circles.size() == 0)
     {
-        //´´½¨Íæ¼Ò
+        //åˆ›å»ºç©å®¶
         player = new PlayerCircle(pen, ImVec2(screen_size.x / 2, screen_size.y), 30);
         circles.push_back(player);
 
-        //´´½¨10¸öËæ»úÔË¶¯µÄRandomMoveCircle¶ÔÏó
+        //åˆ›å»º10ä¸ªéšæœºè¿åŠ¨çš„RandomMoveCircleå¯¹è±¡
         for (int i = 0; i < num_random_circle; i++)
         {
             float rand_x = distribution(generator) / 100.0 * screen_size.x;
@@ -177,8 +228,8 @@ void AirCombatWindow()
             RandomMoveCircle* obj = new RandomMoveCircle(pen, ImVec2(rand_x, 300), 30);
             circles.push_back(obj);
         }
-        /*´´½¨10¸ö³¯ÓÃ»§ÔË¶¯µÄFollowPlayerCircle¶ÔÏó*/
-        /*Õâ¸ö¿ÉÒÔ·ÂÕÕÉÏÃæµÄÄÇ¸öforÑ­»·Ğ´,°ÑrandomÏàÓ¦µÄ²¿·Ö»»³Éfollow¶ÔÓ¦µÄ²¿·Ö*/
+        /*åˆ›å»º10ä¸ªæœç”¨æˆ·è¿åŠ¨çš„FollowPlayerCircleå¯¹è±¡*/
+        /*è¿™ä¸ªå¯ä»¥ä»¿ç…§ä¸Šé¢çš„é‚£ä¸ªforå¾ªç¯å†™,æŠŠrandomç›¸åº”çš„éƒ¨åˆ†æ¢æˆfollowå¯¹åº”çš„éƒ¨åˆ†*/
         for (int i = 0; i < num_follow_circle; i++)
         {
             float rand_x = distribution(generator) / 100.0 * screen_size.x;
@@ -188,26 +239,26 @@ void AirCombatWindow()
         }
     }
 
-    // ´´½¨Ò»¸ö¿ØÖÆÃæ°å´°¿Ú£¬ÔÚÕâ¸ö´°¿ÚÖĞ¿ÉÒÔÉèÖÃÓÎÏ·µÄÒ»Ğ©²ÎÊı
-    ImGui::Begin(u8"·É³öÖØÎ§");                          // Create a window called "Hello, world!" and append into it.
+    // åˆ›å»ºä¸€ä¸ªæ§åˆ¶é¢æ¿çª—å£ï¼Œåœ¨è¿™ä¸ªçª—å£ä¸­å¯ä»¥è®¾ç½®æ¸¸æˆçš„ä¸€äº›å‚æ•°
+    ImGui::Begin(u8"é£å‡ºé‡å›´");                          // Create a window called "Hello, world!" and append into it.
 
-    ImGui::Text(u8"ÄãµÄÈÎÎñ¾ÍÊÇ£ºÒª¿ØÖÆºìÉ«Ô²ÇòÀ´¶ã±ÜµĞ·½·ÉĞĞÎï£¬²¢ÒÆ¶¯µ½´°¿Ú¶¥²¿.\n\nÄã¿ÉÒÔÍ¨¹ı¼ıÍ·°´¼üÀ´¿ØÖÆÏÂ·½µÄºìÉ«Ô²Çò¡£\n\nÆäÖĞ»ÆÇò¿ÉÒÔ¸úËæºìÇòÒÆ¶¯\n \
-           \n Ê§°ÜÌõ¼ş£ººìÉ«Ô²ÇòÅöµ½ÁËÆäËû·ÉĞĞÎï£»\n ³É¹¦Ìõ¼ş£ººìÉ«Ô²ÇòÒÆ¶¯µ½ÁË´°¿Ú¶¥²¿");
+    ImGui::Text(u8"ä½ çš„ä»»åŠ¡å°±æ˜¯ï¼šè¦æ§åˆ¶çº¢è‰²åœ†çƒæ¥èº²é¿æ•Œæ–¹é£è¡Œç‰©ï¼Œå¹¶ç§»åŠ¨åˆ°çª—å£é¡¶éƒ¨.\n\nä½ å¯ä»¥é€šè¿‡ç®­å¤´æŒ‰é”®æ¥æ§åˆ¶ä¸‹æ–¹çš„çº¢è‰²åœ†çƒã€‚\n\nå…¶ä¸­é»„çƒå¯ä»¥è·Ÿéšçº¢çƒç§»åŠ¨\n \
+           \n å¤±è´¥æ¡ä»¶ï¼šçº¢è‰²åœ†çƒç¢°åˆ°äº†å…¶ä»–é£è¡Œç‰©ï¼›\n æˆåŠŸæ¡ä»¶ï¼šçº¢è‰²åœ†çƒç§»åŠ¨åˆ°äº†çª—å£é¡¶éƒ¨");
     ImGui::Separator();
-    ImGui::SliderFloat(u8"Íæ¼ÒËÙ¶È", &player_speed, 0.0f, 20.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-    ImGui::SliderInt(u8"ºÚÉ«·ÉĞĞÎïµÄÊıÁ¿", &num_random_circle, 10, 100);
-    ImGui::SliderFloat(u8"ºÚÉ«·ÉĞĞÎïËÙ¶È", &random_circle_speed, 0.0f, 20.0f);
-    ImGui::SliderInt(u8"»ÆÉ«·ÉĞĞÎïµÄÊıÁ¿", &num_follow_circle, 10, 100);        /*ÔÚÉèÖÃÃæ°åÌí¼Ó»ÆÉ«·ÉĞĞÎïµÄÊıÁ¿*/
-    ImGui::SliderFloat(u8"»ÆÉ«·ÉĞĞÎïµÄËÙ¶È", &follow_circle_speed, 0.0f, 20.0f);/*ÔÚÉèÖÃÃæ°åÌí¼Ó»ÆÉ«·ÉĞĞÎïµÄËÙ¶È*/
-    ImGui::Checkbox(u8"ÔİÍ£ÓÎÏ·", &bPauseGame);
-    if (ImGui::Button(u8"ÖØÖÃÓÎÏ·"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+    ImGui::SliderFloat(u8"ç©å®¶é€Ÿåº¦", &player_speed, 0.0f, 20.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+    ImGui::SliderInt(u8"é»‘è‰²é£è¡Œç‰©çš„æ•°é‡", &num_random_circle, 10, 100);
+    ImGui::SliderFloat(u8"é»‘è‰²é£è¡Œç‰©é€Ÿåº¦", &random_circle_speed, 0.0f, 20.0f);
+    ImGui::SliderInt(u8"é»„è‰²é£è¡Œç‰©çš„æ•°é‡", &num_follow_circle, 10, 100);        /*åœ¨è®¾ç½®é¢æ¿æ·»åŠ é»„è‰²é£è¡Œç‰©çš„æ•°é‡*/
+    ImGui::SliderFloat(u8"é»„è‰²é£è¡Œç‰©çš„é€Ÿåº¦", &follow_circle_speed, 0.0f, 20.0f);/*åœ¨è®¾ç½®é¢æ¿æ·»åŠ é»„è‰²é£è¡Œç‰©çš„é€Ÿåº¦*/
+    ImGui::Checkbox(u8"æš‚åœæ¸¸æˆ", &bPauseGame);
+    if (ImGui::Button(u8"é‡ç½®æ¸¸æˆ"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
     {
         reset_game();
     }
 
     ImGui::End();
 
-    // ¸ù¾İ´°¿ÚÖĞµÄÓÃ»§ÉèÖÃ£¬µ÷ÕûÃ¿¸ö¶ÔÏóµÄÊôĞÔ¡£×¢Òâ£º¶ÔÏóÊıÁ¿²»ÄÜËæÊ±¸Ä±ä£¬¶øÊÇÔÚÃ¿´ÎÖØÖÃÊ±ÉúĞ§¡£
+    // æ ¹æ®çª—å£ä¸­çš„ç”¨æˆ·è®¾ç½®ï¼Œè°ƒæ•´æ¯ä¸ªå¯¹è±¡çš„å±æ€§ã€‚æ³¨æ„ï¼šå¯¹è±¡æ•°é‡ä¸èƒ½éšæ—¶æ”¹å˜ï¼Œè€Œæ˜¯åœ¨æ¯æ¬¡é‡ç½®æ—¶ç”Ÿæ•ˆã€‚
     for (auto obj : circles)
     {
         std::string name = obj->get_class_name();
@@ -218,26 +269,27 @@ void AirCombatWindow()
         if (name == "PlayerCircle")
             ((PlayerCircle*)obj)->set_speed(player_speed);
 
-        if (name == "FollowPlayerCirle")/*Ìí¼ÓFollowPlayerCirleÀàÏàÓ¦µÄÖØÖÃ²Ù×÷*/
+        if (name == "FollowPlayerCirle")/*æ·»åŠ FollowPlayerCirleç±»ç›¸åº”çš„é‡ç½®æ“ä½œ*/
             ((FollowPlayerCircle*)obj)->set_speed(follow_circle_speed);
 
     }
 
-    // ÈÃËùÓĞµÄ·ÉĞĞ¶ÔÏó»îÒ»¸öÊ±¼äÆ¬£¬²¢ÇÒ»æÖÆ×Ô¼º
+    // è®©æ‰€æœ‰çš„é£è¡Œå¯¹è±¡æ´»ä¸€ä¸ªæ—¶é—´ç‰‡ï¼Œå¹¶ä¸”ç»˜åˆ¶è‡ªå·±
     for (auto obj : circles)
     {
-        /*ÕâÀïÒ»¶¨ÒªÌí¼Ó¶ÔÍæ¼ÒÎ»ÖÃµÄ¸üĞÂ,ÒÔ±ãÓÚFollowPlayerCirleÀàÖĞlive_step·½·¨¶ÔÍæ¼ÒÎ»ÖÃµÄ·ÃÎÊ*/
+        /*è¿™é‡Œä¸€å®šè¦æ·»åŠ å¯¹ç©å®¶ä½ç½®çš„æ›´æ–°,ä»¥ä¾¿äºFollowPlayerCirleç±»ä¸­live_stepæ–¹æ³•å¯¹ç©å®¶ä½ç½®çš„è®¿é—®*/
         player_current_pos_x = (player->get_pos()).x;
         player_current_pos_y = (player->get_pos()).y;
         if (!bPauseGame)
         {
             obj->live_step(ImGui::GetTime());
         }
-            
         obj->draw_self();
     }
 
-    // ½øĞĞÅö×²¼ì²â£¬Ò»µ©·¢ÏÖºìÉ«Ğ¡Çò±»Åö×²£¬¾Íµ¯³öÓÎÏ·Ê§°Ü´°¿Ú£¬²¢ÇÒÖØÖÃÓÎÏ·
+    AbstractCircle::reset_pos(circles);
+
+    // è¿›è¡Œç¢°æ’æ£€æµ‹ï¼Œä¸€æ—¦å‘ç°çº¢è‰²å°çƒè¢«ç¢°æ’ï¼Œå°±å¼¹å‡ºæ¸¸æˆå¤±è´¥çª—å£ï¼Œå¹¶ä¸”é‡ç½®æ¸¸æˆ
     bool bGameEnd = false;
     for (auto obj : circles)
     {
@@ -260,11 +312,11 @@ void AirCombatWindow()
     }
     if (bGameEnd)
     {
-        //ÏÔÊ¾¶Ô»°¿ò£¬ÌáÊ¾Íæ¼Ò£¬ÓÎÏ·ÒÑ¾­½áÊø¡£
-        ImGui::OpenPopup(u8"Ê§°Ü!");
-        if (ImGui::BeginPopupModal(u8"Ê§°Ü!", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        //æ˜¾ç¤ºå¯¹è¯æ¡†ï¼Œæç¤ºç©å®¶ï¼Œæ¸¸æˆå·²ç»ç»“æŸã€‚
+        ImGui::OpenPopup(u8"å¤±è´¥!");
+        if (ImGui::BeginPopupModal(u8"å¤±è´¥!", NULL, ImGuiWindowFlags_AlwaysAutoResize))
         {
-            ImGui::Text(u8"ÓÎÏ·½áÊøÁË\n\nÓÎÏ·½«ÖØĞÂ¿ªÊ¼\n");
+            ImGui::Text(u8"æ¸¸æˆç»“æŸäº†\n\næ¸¸æˆå°†é‡æ–°å¼€å§‹\n");
             ImGui::Separator();
 
 
@@ -276,21 +328,21 @@ void AirCombatWindow()
     }
 
 
-    /*    ÇëÌî³ä´Ë´¦´úÂë  -- ¶ÔÓÎÏ·ÊÇ·ñ³É¹¦½øĞĞÅĞ¶Ï£¬Ò»µ©³É¹¦£¬¾Íµ¯³ö¶Ô»°¿òÌáÊ¾ÓÃ»§£¬²¢ÖØÖÃÓÎÏ·
-    *                          ÓÎÏ·³É¹¦µÄÌõ¼şÊÇ£ººìÉ«Ğ¡ÇòµÄ±ßÔµ´¥Åöµ½´°¿Ú¶¥²¿
+    /*    è¯·å¡«å……æ­¤å¤„ä»£ç   -- å¯¹æ¸¸æˆæ˜¯å¦æˆåŠŸè¿›è¡Œåˆ¤æ–­ï¼Œä¸€æ—¦æˆåŠŸï¼Œå°±å¼¹å‡ºå¯¹è¯æ¡†æç¤ºç”¨æˆ·ï¼Œå¹¶é‡ç½®æ¸¸æˆ
+    *                          æ¸¸æˆæˆåŠŸçš„æ¡ä»¶æ˜¯ï¼šçº¢è‰²å°çƒçš„è¾¹ç¼˜è§¦ç¢°åˆ°çª—å£é¡¶éƒ¨
     *
     */
 
-    /*ÏÂÃæµÄÓÎÏ·ÊÇ·ñ³É¹¦¿ÉÒÔ·ÂÕÕÉÏÃæÓÎÏ·ÊÇ·ñ½áÊøµÄ²¿·Ö
-    * ´ÓÉÏÃæµÄÓÎÏ·ÊÇ·ñ½áÊøµÄ²¿·Ö¿ÉÒÔ·¢ÏÖÆä·ÖÎªÁ½¸ö²¿·Ö:
-    *    Ò»²¿·ÖÊÇÉèÖÃbGameEnd²ÎÊı,²¢¶Ô²ÎÊıbGameEndÊÇ·ñ¸üĞÂ½øĞĞÅĞ¶Ï,Èç¹ûĞèÒª¸üĞÂbGameEndµÄÖµ,ÔòĞè½«bPauseGameÉèÖÃ³Étrue¼´ÖĞÖ¹³ÌĞò
-    *    Ò»²¿·ÖÊÇÈç¹ûÂú×ãÓÎÏ·½áÊøµÄÌõ¼ş,ÔòÊä³öÏàÓ¦µÄÌáÊ¾ĞÅÏ¢²¢ÖØÖÃÊÇ·ñÖØĞÂ¿ªÊ¼ÓÎÏ·
-    * ·¢ÏÖÁËÉÏÃæµÄ¹æÂÉºóÏÂÃæµÄÔ­ÀíÒ²ÊÇÀàËÆµÄ,Î¨Ò»µÄ²»Í¬µãÊÇÅĞ¶ÏÌõ¼ş²»Í¬:ÓÎÏ·³É¹¦µÄÅĞ¶ÏÌõ¼şÎªÍæ¼ÒµÄĞ¡ÇòµÄ×İ×ø±êĞ¡ÓÚ°ë¾¶
-    * ×îºó¼ÇµÃÒª½«¸Ä¹ıµÄbPauseGame»¹Ô­
+    /*ä¸‹é¢çš„æ¸¸æˆæ˜¯å¦æˆåŠŸå¯ä»¥ä»¿ç…§ä¸Šé¢æ¸¸æˆæ˜¯å¦ç»“æŸçš„éƒ¨åˆ†
+    * ä»ä¸Šé¢çš„æ¸¸æˆæ˜¯å¦ç»“æŸçš„éƒ¨åˆ†å¯ä»¥å‘ç°å…¶åˆ†ä¸ºä¸¤ä¸ªéƒ¨åˆ†:
+    *    ä¸€éƒ¨åˆ†æ˜¯è®¾ç½®bGameEndå‚æ•°,å¹¶å¯¹å‚æ•°bGameEndæ˜¯å¦æ›´æ–°è¿›è¡Œåˆ¤æ–­,å¦‚æœéœ€è¦æ›´æ–°bGameEndçš„å€¼,åˆ™éœ€å°†bPauseGameè®¾ç½®æˆtrueå³ä¸­æ­¢ç¨‹åº
+    *    ä¸€éƒ¨åˆ†æ˜¯å¦‚æœæ»¡è¶³æ¸¸æˆç»“æŸçš„æ¡ä»¶,åˆ™è¾“å‡ºç›¸åº”çš„æç¤ºä¿¡æ¯å¹¶é‡ç½®æ˜¯å¦é‡æ–°å¼€å§‹æ¸¸æˆ
+    * å‘ç°äº†ä¸Šé¢çš„è§„å¾‹åä¸‹é¢çš„åŸç†ä¹Ÿæ˜¯ç±»ä¼¼çš„,å”¯ä¸€çš„ä¸åŒç‚¹æ˜¯åˆ¤æ–­æ¡ä»¶ä¸åŒ:æ¸¸æˆæˆåŠŸçš„åˆ¤æ–­æ¡ä»¶ä¸ºç©å®¶çš„å°çƒçš„çºµåæ ‡å°äºåŠå¾„
+    * æœ€åè®°å¾—è¦å°†æ”¹è¿‡çš„bPauseGameè¿˜åŸ
     */
     bool bGameSuccess = false;
-    ImVec2 pos_player;/*´æ´¢Íæ¼ÒµÄÎ»ÖÃ*/
-    float _radius_player;/*´æ´¢Íæ¼ÒĞ¡ÇòµÄ°ë¾¶*/
+    ImVec2 pos_player;/*å­˜å‚¨ç©å®¶çš„ä½ç½®*/
+    float _radius_player;/*å­˜å‚¨ç©å®¶å°çƒçš„åŠå¾„*/
     pos_player = player->get_pos();
     _radius_player = player->get_radius();
     if (pos_player.y <= _radius_player)
@@ -300,11 +352,320 @@ void AirCombatWindow()
     }
     if (bGameSuccess)
     {
-        //ÏÔÊ¾¶Ô»°¿ò£¬ÌáÊ¾Íæ¼Ò£¬ÓÎÏ·³É¹¦¡£
-        ImGui::OpenPopup(u8"³É¹¦!");
-        if (ImGui::BeginPopupModal(u8"³É¹¦!", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        //æ˜¾ç¤ºå¯¹è¯æ¡†ï¼Œæç¤ºç©å®¶ï¼Œæ¸¸æˆæˆåŠŸã€‚
+        ImGui::OpenPopup(u8"æˆåŠŸ!");
+        if (ImGui::BeginPopupModal(u8"æˆåŠŸ!", NULL, ImGuiWindowFlags_AlwaysAutoResize))
         {
-            ImGui::Text(u8"ÓÎÏ·³É¹¦ÁË\n\nÓÎÏ·½«ÖØĞÂ¿ªÊ¼\n");
+            ImGui::Text(u8"æ¸¸æˆæˆåŠŸäº†\n\næ¸¸æˆå°†é‡æ–°å¼€å§‹\n");
+            ImGui::Separator();
+
+
+            if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); reset_game(); bPauseGame = false; }
+            ImGui::SetItemDefaultFocus();
+
+            ImGui::EndPopup();
+        }
+    }
+}
+#include <string>
+#include <cmath>
+
+std::default_random_engine generator;//å…¨å±€å˜é‡ï¼Œç”¨äºç”Ÿæˆéšæœºæ•°ï¼Œå› ä¸ºè¿™ä¸ªæ¸¸æˆéœ€è¦ä¸€å®šçš„éšæœºæ€§ï¼Œæ¯”å¦‚éšæœºè¿åŠ¨çš„æ•Œæ–¹
+std::uniform_int_distribution<int> distribution(0, 100);//å…¨å±€å˜é‡ï¼Œç”¨äºç”Ÿæˆå‡åŒ€åˆ†å¸ƒçš„éšæœºæ•°
+
+/*ç”¨äºä¿å­˜ç©å®¶çš„å½“å‰ä½ç½®,è®¾ç½®æˆå…¨å±€å˜é‡æ–¹ä¾¿ä¹‹åçš„FollowPlayerCircleç±»è®¿é—®ç©å®¶çš„ä½ç½®*/
+double player_current_pos_x;
+double player_current_pos_y;
+
+//é£è¡Œç‰©çš„æŠ½è±¡ç±»ï¼Œæ‰€æœ‰æ´¾ç”Ÿç±»éƒ½æ˜¯åœ†å½¢çš„ï¼Œè¿™æ ·ä¾¿äºè¿›è¡Œç¢°æ’æ£€æµ‹ã€‚
+class AbstractCircle
+{
+protected:
+    ImVec2 _pos;//ä½ç½®
+    float _radius;//åŠå¾„
+    ImDrawList* _pen;//ç”¨äºç»˜åˆ¶çš„ç”»ç¬”ï¼Œæ˜¯ImGuiåº“ä¸­çš„åº•å±‚ç»˜å›¾å¯¹è±¡ã€‚
+public:
+    AbstractCircle(ImDrawList* pen, ImVec2 pos, float radius) :_pen(pen), _pos(pos), _radius(radius) {};
+    virtual void draw_self() = 0;//ç»˜åˆ¶è‡ªå·±
+    virtual void live_step(double time) = 0;//åº¦è¿‡ä¸€ä¸ªæ—¶é—´ç‰‡ã€‚åœ¨æ¯ä¸ªæ—¶é—´ç‰‡ä¸­å¯ä»¥è¿åŠ¨ã€å¯ä»¥æ”¹å˜ã€‚
+    virtual std::string get_class_name() { return "AbstractCircle"; }//è·å¾—å¯¹è±¡çš„ç±»åˆ«å
+
+    ImVec2 get_pos() { return _pos; }//è·å¾—å½“å‰ä½ç½®
+    float get_radius() { return _radius; }//è·å¾—åŠå¾„
+};
+
+class PlayerCircle : public AbstractCircle
+{
+private:
+    float _speed = 1;//æ¯æ¬¡ç”¨æˆ·æŒ‰é”®æ—¶çš„ç§»åŠ¨æ­¥é•¿
+public:
+    PlayerCircle(ImDrawList* pen, ImVec2 pos, float radius) :AbstractCircle(pen, pos, radius) {};
+
+    void draw_self() {
+        _pen->AddCircleFilled(_pos, _radius, IM_COL32(255, 0, 0, 200));//å°±æ˜¯ä¸€ä¸ªç®€å•çš„çº¢è‰²å®å¿ƒåœ†
+    }
+    void live_step(double time)
+    {
+        //æ ¹æ®ç”¨æˆ·çš„è¾“å…¥æ”¹å˜ä½ç½®
+        if (ImGui::IsKeyPressed(37))//ç”¨æˆ·æŒ‰ä¸‹å·¦ç®­å¤´æŒ‰é”®
+            _pos.x -= _speed;
+        if (ImGui::IsKeyPressed(39))//ç”¨æˆ·æŒ‰ä¸‹å³ç®­å¤´æŒ‰é”®
+            _pos.x += _speed;
+        if (ImGui::IsKeyPressed(38))//ç”¨æˆ·æŒ‰ä¸‹ä¸Šç®­å¤´æŒ‰é”®
+            _pos.y -= _speed;
+        if (ImGui::IsKeyPressed(40))//ç”¨æˆ·æŒ‰ä¸‹ä¸‹ç®­å¤´æŒ‰é”®
+            _pos.y += _speed;
+    }
+
+    std::string get_class_name() { return "PlayerCircle"; }
+
+    void set_speed(float speed) { _speed = speed; }//è®¾ç½®è¿åŠ¨é€Ÿåº¦
+};
+
+class RandomMoveCircle :public AbstractCircle
+{
+private:
+    float _speed = 1;//æ¯ä¸ªæ—¶é—´ç‰‡çš„è¿åŠ¨æ­¥é•¿
+public:
+    RandomMoveCircle(ImDrawList* pen, ImVec2 pos, float radius) : AbstractCircle(pen, pos, radius) {};
+
+    void draw_self() {
+        _pen->AddCircleFilled(_pos, _radius, IM_COL32(0, 0, 0, 200));//å°±æ˜¯ä¸€ä¸ªç®€å•çš„é»‘è‰²å®å¿ƒåœ†
+    }
+
+    void live_step(double time)
+    {
+        //è·å¾—ä¸€ä¸ªéšæœºçš„æ°´å¹³æ–¹å‘ï¼Œå¹¶æ²¿è¯¥æ–¹å‘ç§»åŠ¨ä¸€ä¸ªæ­¥é•¿
+        bool bLeft = distribution(generator) > 49;
+        _pos.x = bLeft ? _pos.x - _speed : _pos.x + _speed;
+        //è·å¾—ä¸€ä¸ªéšæœºçš„ç«–ç›´æ–¹å‘ï¼Œå¹¶æ²¿è¯¥æ–¹å‘ç§»åŠ¨ä¸€ä¸ªæ­¥é•¿
+        bool bUp = distribution(generator) > 49;
+        _pos.y = bUp ? _pos.y - _speed : _pos.y + _speed;
+    }
+
+    std::string get_class_name() { return "RandomMoveCircle"; }
+
+    void set_speed(float speed) { _speed = speed; }
+};
+
+/*    è¯·å¡«å……æ­¤å¤„ä»£ç   -- ä»AbstractCircleæ´¾ç”Ÿç±»FollowPlayerCircle
+*                         è¿™ä¸ªæ´¾ç”Ÿç±»èƒ½å¤Ÿåœ¨æ¯ä¸ªæ—¶é—´ç‰‡æœç©å®¶çš„çº¢è‰²åœ†çƒæ–¹å‘ç§»åŠ¨ä¸€ä¸ªæ­¥é•¿
+*                          è¦æ±‚è¿™ç±»å°çƒä»¥é»„è‰²å¡«å……åœ†æ˜¾ç¤ºï¼Œå¤§å°ä¸çº¢çƒå’Œé»‘çƒä¸€æ ·ã€‚
+*                         è¦èƒ½å¤Ÿåœ¨è®¾ç½®çª—å£ä¸­è®¾ç½®è¿™ç±»å°çƒçš„ç§»åŠ¨æ­¥é•¿å’Œæ•°é‡ã€‚
+*                          è¦åœ¨å‡½æ•°AirCombatWindowçš„æ¸¸æˆåˆå§‹åŒ–éƒ¨åˆ†ï¼Œåˆ›å»ºå¹¶æ·»åŠ æŒ‡å®šæ•°é‡çš„è¿™ç±»å°çƒ
+*
+*      ï¼ï¼ï¼æ³¨æ„ï¼šè¿™ä¸ªè¦æ±‚æ¯”è¾ƒéš¾ï¼Œå»ºè®®ä½ å¡«å……å®Œå…¶ä»–éƒ¨åˆ†çš„ä»£ç åå†æ¥å°è¯•ã€‚
+*/
+
+/*ä¸‹é¢çš„è¿™ä¸ªç±»ä»¿ç…§ä¸Šé¢RandomMoveCircleç±»çš„å†™æ³•å³å¯,å”¯ä¸€è¦æ³¨æ„çš„æ˜¯FollowPlayerCircleç±»ä¸­çš„é»„è‰²å°çƒçš„ç§»åŠ¨æ–¹å¼ä¸åŒ*/
+class FollowPlayerCircle :public AbstractCircle/*æ³¨æ„è¦publicç»§æ‰¿,å¦åˆ™ä¼šæŠ¥é”™*/
+{
+private:
+    float _speed = 1;
+public:
+    FollowPlayerCircle(ImDrawList* pen, ImVec2 pos, float radius) : AbstractCircle(pen, pos, radius) {};
+
+    void draw_self()
+    {
+        _pen->AddCircleFilled(_pos, _radius, IM_COL32(255, 255, 0, 200));/*å°±æ˜¯ä¸€ä¸ªç®€å•çš„é»„è‰²å®å¿ƒåœ†,è¿™é‡Œçš„IM_COL32(255, 255, 0, 200)é‡Œé¢çš„å‰ä¸‰ä¸ªå‚æ•°æ˜¯RGBç¼–ç (å³çº¢è‰²+ç»¿è‰²+è“è‰²ä¸‰ä¸ªé¢œè‰²çš„å€¼æ··åˆ)*/
+    }
+    /*
+     *ä¸‹é¢çš„æˆå‘˜å‡½æ•°æ˜¯æœ¬æ¬¡å®éªŒæœ€éš¾çš„éƒ¨åˆ†,éš¾ç‚¹åœ¨äºå¦‚ä½•è°ƒè®¿é—®ç©å®¶å½“å‰çš„ä½ç½®
+     *å¦‚æœåœ¨live_stepä¸­ä¼ å…¥ç©å®¶çš„xå’Œyåæ ‡,ç”±äºå¯¹åº”çš„xå’Œyåæ ‡éƒ½æ˜¯å‡½æ•°é‡Œçš„é™æ€å˜é‡,æ²¡æœ‰è®¿é—®æƒé™
+     *ä¸”åœ¨è¯¥ç±»çš„çˆ¶ç±»AbstractCircleä¸­çš„live_stepæ˜¯æŠ½è±¡æ–¹æ³•,ä¸èƒ½è°ƒç”¨é™æ€å˜é‡,æ‰€ä»¥å¦‚ä½•ä¼ å…¥ç©å®¶å½“å‰çš„ä½ç½®åˆ™æ˜¯é—®é¢˜çš„å…³é”®
+     */
+    void live_step(double time)
+    {
+        _pos.x = player_current_pos_x > _pos.x ? _pos.x + 1 : _pos.x - 1;
+        _pos.y = player_current_pos_y > _pos.y ? _pos.y + 1 : _pos.y - 1;
+    }
+
+    std::string get_class_name() { return "FollowPlayerCircle"; }
+
+    void set_speed(float speed) { _speed = speed; }
+};
+
+
+
+
+
+
+
+//å…¨å±€å˜é‡
+std::vector<AbstractCircle*> circles;//ä¿å­˜æ‰€æœ‰çš„é£è¡Œç‰©å¯¹è±¡ï¼ŒåŒ…æ‹¬ç©å®¶ã€‚æ³¨æ„è¿™æ˜¯ä¸€ä¸ªå…¨å±€å˜é‡ï¼Œ
+                                        //æˆ‘ä»¬ä¼šåœ¨main.cppçš„ç¨‹åºç»“æŸæ—¶æ‰‹å·¥deleteè¯¥åˆ—è¡¨ä¸­çš„æ¯ä¸ªå¯¹è±¡ã€‚
+float player_speed = 5.0f;//ç©å®¶çš„ç§»åŠ¨é€Ÿåº¦
+float random_circle_speed = 5.0f;//éšæœºè¿åŠ¨å°çƒçš„é€Ÿåº¦
+int num_random_circle = 20;//éšæœºè¿åŠ¨å°çƒçš„æ•°é‡
+int num_follow_circle = 20;/*æœç©å®¶è¿åŠ¨å°çƒçš„æ•°é‡*/
+float follow_circle_speed = 5.0f;/*æœç©å®¶è¿åŠ¨å°çƒçš„é€Ÿåº¦*/
+
+
+void reset_game()//é‡ç½®æ¸¸æˆ
+{
+    //é‡ç½®æ‰€æœ‰å‚æ•°
+    player_speed = 5.0f;
+    random_circle_speed = 5.0f;
+
+    //é‡Šæ”¾æ‰€æœ‰é£è¡Œç‰©å¯¹è±¡
+    for (auto o : circles)
+    {
+        delete o;
+    }
+    circles.clear();
+};
+
+//æ¸¸æˆçš„ä¸»å‡½æ•°
+void AirCombatWindow()
+{
+    static PlayerCircle* player = NULL;//ä¿å­˜æŒ‡å‘ç©å®¶çº¢è‰²å°çƒçš„æŒ‡é’ˆ  
+    static bool bPauseGame = false;//æ ‡è®°æ˜¯å¦è¦æš‚åœæ¸¸æˆ
+
+    //è¿›è¡Œæ¸¸æˆçš„åˆå§‹åŒ–
+    ImDrawList* pen = ImGui::GetBackgroundDrawList();//è·å¾—ç”»ç¬”å¯¹è±¡
+    ImVec2 screen_size = ImGui::GetIO().DisplaySize;
+    if (circles.size() == 0)
+    {
+        //åˆ›å»ºç©å®¶
+        player = new PlayerCircle(pen, ImVec2(screen_size.x / 2, screen_size.y), 30);
+        circles.push_back(player);
+
+        //åˆ›å»º10ä¸ªéšæœºè¿åŠ¨çš„RandomMoveCircleå¯¹è±¡
+        for (int i = 0; i < num_random_circle; i++)
+        {
+            float rand_x = distribution(generator) / 100.0 * screen_size.x;
+
+            RandomMoveCircle* obj = new RandomMoveCircle(pen, ImVec2(rand_x, 300), 30);
+            circles.push_back(obj);
+        }
+        /*åˆ›å»º10ä¸ªæœç”¨æˆ·è¿åŠ¨çš„FollowPlayerCircleå¯¹è±¡*/
+        /*è¿™ä¸ªå¯ä»¥ä»¿ç…§ä¸Šé¢çš„é‚£ä¸ªforå¾ªç¯å†™,æŠŠrandomç›¸åº”çš„éƒ¨åˆ†æ¢æˆfollowå¯¹åº”çš„éƒ¨åˆ†*/
+        for (int i = 0; i < num_follow_circle; i++)
+        {
+            float rand_x = distribution(generator) / 100.0 * screen_size.x;
+
+            FollowPlayerCircle* obj = new FollowPlayerCircle(pen, ImVec2(rand_x, 300), 30);
+            circles.push_back(obj);
+        }
+    }
+
+    // åˆ›å»ºä¸€ä¸ªæ§åˆ¶é¢æ¿çª—å£ï¼Œåœ¨è¿™ä¸ªçª—å£ä¸­å¯ä»¥è®¾ç½®æ¸¸æˆçš„ä¸€äº›å‚æ•°
+    ImGui::Begin(u8"é£å‡ºé‡å›´");                          // Create a window called "Hello, world!" and append into it.
+
+    ImGui::Text(u8"ä½ çš„ä»»åŠ¡å°±æ˜¯ï¼šè¦æ§åˆ¶çº¢è‰²åœ†çƒæ¥èº²é¿æ•Œæ–¹é£è¡Œç‰©ï¼Œå¹¶ç§»åŠ¨åˆ°çª—å£é¡¶éƒ¨.\n\nä½ å¯ä»¥é€šè¿‡ç®­å¤´æŒ‰é”®æ¥æ§åˆ¶ä¸‹æ–¹çš„çº¢è‰²åœ†çƒã€‚\n\nå…¶ä¸­é»„çƒå¯ä»¥è·Ÿéšçº¢çƒç§»åŠ¨\n \
+           \n å¤±è´¥æ¡ä»¶ï¼šçº¢è‰²åœ†çƒç¢°åˆ°äº†å…¶ä»–é£è¡Œç‰©ï¼›\n æˆåŠŸæ¡ä»¶ï¼šçº¢è‰²åœ†çƒç§»åŠ¨åˆ°äº†çª—å£é¡¶éƒ¨");
+    ImGui::Separator();
+    ImGui::SliderFloat(u8"ç©å®¶é€Ÿåº¦", &player_speed, 0.0f, 20.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+    ImGui::SliderInt(u8"é»‘è‰²é£è¡Œç‰©çš„æ•°é‡", &num_random_circle, 10, 100);
+    ImGui::SliderFloat(u8"é»‘è‰²é£è¡Œç‰©é€Ÿåº¦", &random_circle_speed, 0.0f, 20.0f);
+    ImGui::SliderInt(u8"é»„è‰²é£è¡Œç‰©çš„æ•°é‡", &num_follow_circle, 10, 100);        /*åœ¨è®¾ç½®é¢æ¿æ·»åŠ é»„è‰²é£è¡Œç‰©çš„æ•°é‡*/
+    ImGui::SliderFloat(u8"é»„è‰²é£è¡Œç‰©çš„é€Ÿåº¦", &follow_circle_speed, 0.0f, 20.0f);/*åœ¨è®¾ç½®é¢æ¿æ·»åŠ é»„è‰²é£è¡Œç‰©çš„é€Ÿåº¦*/
+    ImGui::Checkbox(u8"æš‚åœæ¸¸æˆ", &bPauseGame);
+    if (ImGui::Button(u8"é‡ç½®æ¸¸æˆ"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+    {
+        reset_game();
+    }
+
+    ImGui::End();
+
+    // æ ¹æ®çª—å£ä¸­çš„ç”¨æˆ·è®¾ç½®ï¼Œè°ƒæ•´æ¯ä¸ªå¯¹è±¡çš„å±æ€§ã€‚æ³¨æ„ï¼šå¯¹è±¡æ•°é‡ä¸èƒ½éšæ—¶æ”¹å˜ï¼Œè€Œæ˜¯åœ¨æ¯æ¬¡é‡ç½®æ—¶ç”Ÿæ•ˆã€‚
+    for (auto obj : circles)
+    {
+        std::string name = obj->get_class_name();
+
+        if (name == "RandomMoveCircle")
+            ((RandomMoveCircle*)obj)->set_speed(random_circle_speed);
+
+        if (name == "PlayerCircle")
+            ((PlayerCircle*)obj)->set_speed(player_speed);
+
+        if (name == "FollowPlayerCirle")/*æ·»åŠ FollowPlayerCirleç±»ç›¸åº”çš„é‡ç½®æ“ä½œ*/
+            ((FollowPlayerCircle*)obj)->set_speed(follow_circle_speed);
+
+    }
+
+    // è®©æ‰€æœ‰çš„é£è¡Œå¯¹è±¡æ´»ä¸€ä¸ªæ—¶é—´ç‰‡ï¼Œå¹¶ä¸”ç»˜åˆ¶è‡ªå·±
+    for (auto obj : circles)
+    {
+        /*è¿™é‡Œä¸€å®šè¦æ·»åŠ å¯¹ç©å®¶ä½ç½®çš„æ›´æ–°,ä»¥ä¾¿äºFollowPlayerCirleç±»ä¸­live_stepæ–¹æ³•å¯¹ç©å®¶ä½ç½®çš„è®¿é—®*/
+        player_current_pos_x = (player->get_pos()).x;
+        player_current_pos_y = (player->get_pos()).y;
+        if (!bPauseGame)
+        {
+            obj->live_step(ImGui::GetTime());
+        }
+            
+        obj->draw_self();
+    }
+
+    // è¿›è¡Œç¢°æ’æ£€æµ‹ï¼Œä¸€æ—¦å‘ç°çº¢è‰²å°çƒè¢«ç¢°æ’ï¼Œå°±å¼¹å‡ºæ¸¸æˆå¤±è´¥çª—å£ï¼Œå¹¶ä¸”é‡ç½®æ¸¸æˆ
+    bool bGameEnd = false;
+    for (auto obj : circles)
+    {
+        if (obj->get_class_name() != "PlayerCircle"&& obj->get_class_name() != "FollowPlayerCircle")
+        {
+            float dist_required = obj->get_radius() + player->get_radius();
+
+            ImVec2 pos1, pos2;
+            pos1 = obj->get_pos();
+            pos2 = player->get_pos();
+            float dist_real = sqrt((pos1.x - pos2.x) * (pos1.x - pos2.x) + (pos1.y - pos2.y) * (pos1.y - pos2.y));
+
+            if (dist_real < dist_required)
+            {
+                bGameEnd = true;
+                bPauseGame = true;
+                break;
+            }
+        }
+    }
+    if (bGameEnd)
+    {
+        //æ˜¾ç¤ºå¯¹è¯æ¡†ï¼Œæç¤ºç©å®¶ï¼Œæ¸¸æˆå·²ç»ç»“æŸã€‚
+        ImGui::OpenPopup(u8"å¤±è´¥!");
+        if (ImGui::BeginPopupModal(u8"å¤±è´¥!", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text(u8"æ¸¸æˆç»“æŸäº†\n\næ¸¸æˆå°†é‡æ–°å¼€å§‹\n");
+            ImGui::Separator();
+
+
+            if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); reset_game(); bPauseGame = false; }
+            ImGui::SetItemDefaultFocus();
+
+            ImGui::EndPopup();
+        }
+    }
+
+
+    /*    è¯·å¡«å……æ­¤å¤„ä»£ç   -- å¯¹æ¸¸æˆæ˜¯å¦æˆåŠŸè¿›è¡Œåˆ¤æ–­ï¼Œä¸€æ—¦æˆåŠŸï¼Œå°±å¼¹å‡ºå¯¹è¯æ¡†æç¤ºç”¨æˆ·ï¼Œå¹¶é‡ç½®æ¸¸æˆ
+    *                          æ¸¸æˆæˆåŠŸçš„æ¡ä»¶æ˜¯ï¼šçº¢è‰²å°çƒçš„è¾¹ç¼˜è§¦ç¢°åˆ°çª—å£é¡¶éƒ¨
+    *
+    */
+
+    /*ä¸‹é¢çš„æ¸¸æˆæ˜¯å¦æˆåŠŸå¯ä»¥ä»¿ç…§ä¸Šé¢æ¸¸æˆæ˜¯å¦ç»“æŸçš„éƒ¨åˆ†
+    * ä»ä¸Šé¢çš„æ¸¸æˆæ˜¯å¦ç»“æŸçš„éƒ¨åˆ†å¯ä»¥å‘ç°å…¶åˆ†ä¸ºä¸¤ä¸ªéƒ¨åˆ†:
+    *    ä¸€éƒ¨åˆ†æ˜¯è®¾ç½®bGameEndå‚æ•°,å¹¶å¯¹å‚æ•°bGameEndæ˜¯å¦æ›´æ–°è¿›è¡Œåˆ¤æ–­,å¦‚æœéœ€è¦æ›´æ–°bGameEndçš„å€¼,åˆ™éœ€å°†bPauseGameè®¾ç½®æˆtrueå³ä¸­æ­¢ç¨‹åº
+    *    ä¸€éƒ¨åˆ†æ˜¯å¦‚æœæ»¡è¶³æ¸¸æˆç»“æŸçš„æ¡ä»¶,åˆ™è¾“å‡ºç›¸åº”çš„æç¤ºä¿¡æ¯å¹¶é‡ç½®æ˜¯å¦é‡æ–°å¼€å§‹æ¸¸æˆ
+    * å‘ç°äº†ä¸Šé¢çš„è§„å¾‹åä¸‹é¢çš„åŸç†ä¹Ÿæ˜¯ç±»ä¼¼çš„,å”¯ä¸€çš„ä¸åŒç‚¹æ˜¯åˆ¤æ–­æ¡ä»¶ä¸åŒ:æ¸¸æˆæˆåŠŸçš„åˆ¤æ–­æ¡ä»¶ä¸ºç©å®¶çš„å°çƒçš„çºµåæ ‡å°äºåŠå¾„
+    * æœ€åè®°å¾—è¦å°†æ”¹è¿‡çš„bPauseGameè¿˜åŸ
+    */
+    bool bGameSuccess = false;
+    ImVec2 pos_player;/*å­˜å‚¨ç©å®¶çš„ä½ç½®*/
+    float _radius_player;/*å­˜å‚¨ç©å®¶å°çƒçš„åŠå¾„*/
+    pos_player = player->get_pos();
+    _radius_player = player->get_radius();
+    if (pos_player.y <= _radius_player)
+    {
+        bGameSuccess = true;
+        bPauseGame = true;
+    }
+    if (bGameSuccess)
+    {
+        //æ˜¾ç¤ºå¯¹è¯æ¡†ï¼Œæç¤ºç©å®¶ï¼Œæ¸¸æˆæˆåŠŸã€‚
+        ImGui::OpenPopup(u8"æˆåŠŸ!");
+        if (ImGui::BeginPopupModal(u8"æˆåŠŸ!", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text(u8"æ¸¸æˆæˆåŠŸäº†\n\næ¸¸æˆå°†é‡æ–°å¼€å§‹\n");
             ImGui::Separator();
 
 
